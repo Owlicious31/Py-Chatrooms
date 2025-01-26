@@ -47,6 +47,7 @@ class LoginScreen(ctk.CTk):
 
         self.title("Login")
         self.geometry("400x600")
+        self.maxsize(width=400,height=600)
 
         self.login_frame = LoginFrame(master=self)
         self.login_frame.place(x=40,y=150)
