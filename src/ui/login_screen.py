@@ -1,6 +1,5 @@
 import customtkinter as ctk
 
-
 class LoginFrame(ctk.CTkFrame):
 
     def __init__(self,master) -> None:
@@ -31,13 +30,12 @@ class LoginFrame(ctk.CTkFrame):
         if self.new_user_checkbox.get() == 1:
             pass
             # TODO - Make signup function in functionality and call it here.
-            # Create a new user object and write it's password and username file to user_info.json
+            # Create a new user object and write it's password and username to the db
         
         else:
             pass
             # TODO - Make login function in functionality and call it here.
-            # Check if user_info.json exists and if so compare the username and hashed password
-            # in the file to the ones provided by the user.
+            # Check if user exists and validate credentials
 
 
 class LoginScreen(ctk.CTk):
@@ -51,6 +49,7 @@ class LoginScreen(ctk.CTk):
 
         self.login_frame = LoginFrame(master=self)
         self.login_frame.place(x=40,y=150)
+
 
 if __name__ == "__main__":
     app = LoginScreen()

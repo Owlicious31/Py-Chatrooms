@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from all_chats_display import AllChatsDisplay
+from tkinter import TclError
 
 class ChatDisplayFrame(ctk.CTkFrame):
         
@@ -18,16 +18,17 @@ class ChatDisplayFrame(ctk.CTkFrame):
 
     def send_message(self) -> None:
         # Message will be retrieved from a client with a fuction in functionality and added as a label to the messages display frame.
-        # TODO - Create function to get input from the two users and create a new label in the frame containing the message
+        # TODO - Create function to get input from the users and create a new label in the frame containing the message
+        # TODO - import a send_message func here from /messages
         pass
 
 
 class SessionDisplay(ctk.CTk):
 
-    def __init__(self,contact_name: str) -> None:
+    def __init__(self,chat_name: str) -> None:
         super().__init__()
 
-        self.title(f"Chat session - {contact_name}")
+        self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
         self.maxsize(width=400,height=600)
 
@@ -37,11 +38,29 @@ class SessionDisplay(ctk.CTk):
         self.return_button = ctk.CTkButton(master=self,text="Return to chats",command=self.return_to_chats)
         self.return_button.grid(column=0,row=0,sticky="w",pady=20,padx=10)
     
+    
     def return_to_chats(self) -> None:
+        from all_chats_display import AllChatsDisplay
+        #Import is called in function to avoid circular imports
+
         self.chats_window = AllChatsDisplay()
+
+        # Destroying session window so only one session can be active at a time
+        try:
+            self.destroy()
+
+        except TclError:
+            # Ignoring the TclError raised when window can't be destroyed after destruction
+            pass
+
         self.chats_window.mainloop()
+
+        # Destroying session window so only one session can be active at a time
+        self.destroy()
+
+        # TODO - fix destroy method raising TclError
 
 
 if __name__ == "__main__":
-    app = SessionDisplay(contact_name="Test")
+    app = SessionDisplay(chat_name="Test")
     app.mainloop()
