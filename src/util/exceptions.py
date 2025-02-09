@@ -1,21 +1,20 @@
 
 class NoSuchUserException(Exception):
-    """Was unable to find a user_info.json file in the current directory"""
+    """Was unable to find user in the db"""
     pass
 
-class MissingInfoException(Exception):
-    """Was unable to find some info in sessions_info.json"""
-    pass
-
-class SessionsInfoMissingException(Exception):
-    """sessions_info.json is either not in the main directory or empty"""
+class MissingSessionInfoException(Exception):
+    """Was unable to find some info on a session """
     pass
 
 class NonExistentSessionException(Exception):
-    """Was unable to find a session from the provided index"""
+    """Was unable to find a session for the provided invite code"""
     pass
 
-class InvalidMessageTypeException(Exception):
-    """An invalid message type was provided i.e not 'str'"""
+class SessionParsingException(Exception):
+    """Was unable to read session info and utilize it"""
+
+class InvalidCredentialsException(Exception):
+    """Provided user credentials did not match thos stored in the db"""
     pass
 # TODO - Add more exceptions for specific cases
