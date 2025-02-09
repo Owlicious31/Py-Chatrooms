@@ -1,0 +1,2 @@
+# TODO - create loginmanager class that validates user credentials and returns a user's info
+# using a func from db_loader.py if they are valid.
