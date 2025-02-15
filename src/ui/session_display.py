@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkinter import TclError
 
+
 class ChatDisplayFrame(ctk.CTkFrame):
         
     def __init__(self,master) -> None:
@@ -30,20 +31,21 @@ class SessionDisplay(ctk.CTk):
 
         self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
+        self.wm_iconbitmap("../../assets/app_icon.ico")
         self.maxsize(width=400,height=600)
 
         self.chat_frame = ChatDisplayFrame(master=self)
-        self.chat_frame.place(x=70,y=150)
+        self.chat_frame.egrid(column=0,row=1,padx=70,pady=40)
 
         self.return_button = ctk.CTkButton(master=self,text="Return to chats",command=self.return_to_chats)
         self.return_button.grid(column=0,row=0,sticky="w",pady=20,padx=10)
     
     
     def return_to_chats(self) -> None:
-        from all_chats_display import AllChatsDisplay
+        from chats_display import ChatsDisplay
         #Import is called in function to avoid circular imports
 
-        self.chats_window = AllChatsDisplay()
+        self.chats_window = ChatsDisplay()
 
         # Destroying session window so only one session can be active at a time
         try:
@@ -55,10 +57,6 @@ class SessionDisplay(ctk.CTk):
 
         self.chats_window.mainloop()
 
-        # Destroying session window so only one session can be active at a time
-        self.destroy()
-
-        # TODO - fix destroy method raising TclError
 
 
 if __name__ == "__main__":

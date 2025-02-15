@@ -24,17 +24,17 @@ class LoginFrame(ctk.CTkFrame):
     def login_user(self) -> None:
         """
         Log a user into their account or sign up a new user.
-        Return: None
+        :returns: None
         """
         
         if self.new_user_checkbox.get() == 1:
             pass
-            # TODO - Make signup function in functionality and call it here.
+            # TODO - Make signup method in login_manager and call it here.
             # Create a new user object and write it's password and username to the db
         
         else:
             pass
-            # TODO - Make login function in functionality and call it here.
+            # TODO - Make login method in login_manager and call it here.
             # Check if user exists and validate credentials
 
 
@@ -45,6 +45,7 @@ class LoginScreen(ctk.CTk):
 
         self.title("Login")
         self.geometry("400x600")
+        self.wm_iconbitmap("../../assets/app_icon.ico")
         self.maxsize(width=400,height=600)
 
         self.login_frame = LoginFrame(master=self)
