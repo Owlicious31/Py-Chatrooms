@@ -56,7 +56,8 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
                         master=self,
                         text=f"{index + 1}. Unnamed Chat",
                         font=("arial",18,"normal"),
-                        width=380,height=60,
+                        width=380,
+                        height=60,
                         command= lambda: self.open_session(index=index)
                         )
                 

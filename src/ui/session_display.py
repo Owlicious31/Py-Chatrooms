@@ -35,7 +35,7 @@ class SessionDisplay(ctk.CTk):
         self.maxsize(width=400,height=600)
 
         self.chat_frame = ChatDisplayFrame(master=self)
-        self.chat_frame.egrid(column=0,row=1,padx=70,pady=40)
+        self.chat_frame.grid(column=0,row=1,padx=70,pady=40)
 
         self.return_button = ctk.CTkButton(master=self,text="Return to chats",command=self.return_to_chats)
         self.return_button.grid(column=0,row=0,sticky="w",pady=20,padx=10)
