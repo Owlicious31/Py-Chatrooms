@@ -70,7 +70,8 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
                         height=60,
                         command= lambda: self.open_session(index=index)
                         )
-                    session_button.pack(pady=10,anchor="w") 
+                
+                session_button.pack(pady=10,anchor="w") 
                 
                 self.session_buttons.append(session_button)
         
