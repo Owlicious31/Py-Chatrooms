@@ -1,14 +1,5 @@
-import os
-import threading
-import time
-import sys
-
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir,"..")
-sys.path.append(os.path.abspath(parent_dir))
-
-from functionality.messages.receiver import MessageReceiver
-from functionality.messages.sender import MessageSender
+from messages.receiver import MessageReceiver
+from messages.sender import MessageSender
 
 class Session:
 
@@ -23,3 +14,5 @@ class Session:
         self.sender.send_message(message)
         return self.receiver.messages
     
+#TODO - replace returning messages with listening for messages and update gui whenever new message is sent
+#TODO - add listen for messages method
