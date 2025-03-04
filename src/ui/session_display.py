@@ -1,11 +1,21 @@
+import os
+import sys
 import customtkinter as ctk
 from tkinter import TclError
 
+current_dir = os.path.dirname(__file__)
+parent_dir = os.path.join(current_dir,"..")
+sys.path.append(os.path.abspath(parent_dir))
+
+from functionality.session import Session
+from util.exceptions import NoMessageProvidedException
 
 class SessionDisplay(ctk.CTk):
 
     def __init__(self,chat_name: str) -> None:
         super().__init__()
+
+        self.session = Session()
 
         self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
@@ -26,10 +36,21 @@ class SessionDisplay(ctk.CTk):
 
 
     def send_message(self) -> None:
-        # Message will be retrieved from a client with a fuction in functionality and added as a label to the messages display frame.
-        # TODO - Create function to get input from the users and create a new label in the frame containing the message
-        # TODO - import a send_message func here from /messages
-        pass
+        if not self.message_entry.get():
+            return
+
+        messages = self.session.process_and_return_message(message=self.message_entry.get())
+        
+        for child in self.messages_display.winfo_children():
+            child.destroy()
+
+        for message in messages:
+            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
+            message_label.pack(anchor="w")
+
+        #TODO - Stop messages from being sent when the program first opens and sync messages between users
+        # and reduce message sending delay. Add docstrings.
+        
 
     def return_to_chats(self) -> None:
         from chats_display import ChatsDisplay
