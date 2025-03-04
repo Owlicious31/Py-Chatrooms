@@ -5,12 +5,13 @@ class MessageSender:
     def __init__(self) -> None:
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='127.0.0.1'))
         self.channel = self.connection.channel()
-        self.channel.queue_declare(queue="messageQueue")
+        self.channel.exchange_declare(exchange='chatExchange', exchange_type='fanout')
+        self.channel.confirm_delivery()
+
 
     def send_message(self,message: str) -> None:
-
-        self.channel.basic_publish(exchange='',
-                      routing_key='messageQueue',
-                      body=message)
-        
-        self.connection.close()
+        self.channel.basic_publish(exchange='chatExchange',
+                      routing_key='',
+                      body=message,
+                      properties=pika.BasicProperties(delivery_mode = pika.DeliveryMode.Persistent)
+                      )

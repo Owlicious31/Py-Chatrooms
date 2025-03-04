@@ -1,62 +1,27 @@
 import os
-import json
+import threading
+import time
 import sys
 
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
 
-from util.exceptions import (
-     MissingSessionInfoException,
-     NonExistentSessionException,
-)
-
-# TODO - Create session class to better manage individual session info
+from functionality.messages.receiver import MessageReceiver
+from functionality.messages.sender import MessageSender
 
 class Session:
 
-    def __init__(self, index: int) -> None:
-        # ! Deprecated - to be rewritten
-        pass
-        # self.index = index
-        
-        # if not os.path.exists("../sessions_info.json"):
-        #     raise SessionsInfoMissingException("Could not find sessions_info.json in the main directory")
-        
-        # with open("../sessions_info.json") as file:
-        #     try:
-        #         self.session_info = json.load(file)[self.index]
-            
-        #     except IndexError:
-        #         raise NonExistentSessionException(f"Was uanble to find a session at index: {index}")
+    def __init__(self) -> None:
+        self.sender = MessageSender()
+        self.receiver = MessageReceiver()
 
-        #     except json.decoder.JSONDecodeError:
-        #         raise SessionsInfoMissingException("Could not load json file, likely empty.")
-        
-        # try:    
-        #     self.contact = self.session_info["contact"]
-        #     self.messages = self.session_info["messages"]
-        
-        # except KeyError:
-        #     raise MissingSessionInfoException("Was unable to construct session due to missing information in session info.")
-        
+        self.all_messages = self.receiver.messages
+        threading.Thread(target=self.process_and_return_message).start()
 
-    # def update_messages(self,new_message: str) -> None:
-        
-    #     if not isinstance(new_message,str):
-    #         raise InvalidMessageTypeException(f"Message: {new_message} is invalid, must be type 'str'")
-        
-    #     self.messages.append(new_message)
-    #     self.session_info["messages"] = self.messages
-        
-    #     with open("../sessions_info.json") as file:
-    #         try:
-    #             sessions_data = json.load(file)
 
-    #         except json.decoder.JSONDecodeError:
-    #             raise SessionsInfoMissingException("Could not load json file, likely empty.")
-            
-    #     with open("../sessions_info.json","w") as file:
-    #         sessions_data[self.index] = self.session_info
-    #         json.dump(sessions_data,file,indent=4)
-
+    def process_and_return_message(self,message: str) -> list[str]:
+        while True:
+            self.sender.send_message(message)
+            time.sleep(1.5)
+            return self.receiver.messages
