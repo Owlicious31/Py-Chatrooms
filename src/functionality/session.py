@@ -21,7 +21,5 @@ class Session:
 
 
     def process_and_return_message(self,message: str) -> list[str]:
-        while True:
-            self.sender.send_message(message)
-            time.sleep(1.5)
-            return self.receiver.messages
+        self.sender.send_message(message)
+        return self.receiver.messages
