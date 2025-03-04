@@ -8,7 +8,6 @@ parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
 
 from functionality.session import Session
-from util.exceptions import NoMessageProvidedException
 
 class SessionDisplay(ctk.CTk):
 
@@ -57,6 +56,7 @@ class SessionDisplay(ctk.CTk):
         #Import is called in function to avoid circular imports
 
         self.chats_window = ChatsDisplay()
+        self.session.stop_session()
 
         # Destroying session window so only one session can be active at a time
         try:

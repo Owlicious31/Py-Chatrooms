@@ -17,9 +17,9 @@ class Session:
         self.receiver = MessageReceiver()
 
         self.all_messages = self.receiver.messages
-        threading.Thread(target=self.process_and_return_message).start()
 
 
     def process_and_return_message(self,message: str) -> list[str]:
         self.sender.send_message(message)
         return self.receiver.messages
+    
