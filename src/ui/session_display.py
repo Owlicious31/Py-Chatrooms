@@ -56,7 +56,6 @@ class SessionDisplay(ctk.CTk):
         #Import is called in function to avoid circular imports
 
         self.chats_window = ChatsDisplay()
-        self.session.stop_session()
 
         # Destroying session window so only one session can be active at a time
         try:
