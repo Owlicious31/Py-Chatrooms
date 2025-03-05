@@ -18,7 +18,13 @@ class SessionDisplay(ctk.CTk):
 
         self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
-        self.wm_iconbitmap("../../assets/app_icon.ico")
+
+        try:
+            self.wm_iconbitmap("../../assets/app_icon.ico")
+        except TclError:
+            # Acessing assets directly when the code is run from app.py
+            self.wm_iconbitmap("assets/app_icon.ico")
+        
         self.maxsize(width=400,height=600)
 
         self.messages_display = ctk.CTkScrollableFrame(master=self,height=300,width=270,border_color="black",border_width=5)
@@ -52,7 +58,7 @@ class SessionDisplay(ctk.CTk):
         
 
     def return_to_chats(self) -> None:
-        from chats_display import ChatsDisplay
+        from .chats_display import ChatsDisplay
         #Import is called in function to avoid circular imports
 
         self.chats_window = ChatsDisplay()

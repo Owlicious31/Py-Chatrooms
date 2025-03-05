@@ -1,9 +1,14 @@
+from tkinter import TclError
 import customtkinter as ctk
+from .chats_display import ChatsDisplay
 
 class LoginFrame(ctk.CTkFrame):
 
     def __init__(self,master) -> None:
         super().__init__(master=master)
+
+        #! Edit this when login logic is added
+        self.parent = master
         
         self.login_label = ctk.CTkLabel(master=self,text_color="white",text="Login",font=("arial",80,"bold"))
         self.login_label.grid(column=0,row=0,columnspan=2)
@@ -28,12 +33,33 @@ class LoginFrame(ctk.CTkFrame):
         """
         
         if self.new_user_checkbox.get() == 1:
-            pass
+            #! Edit this when login logic is added
+            self.chats_display = ChatsDisplay()
+            self.chats_display.mainloop()
+            try:
+                self.parent.destroy()
+        
+            except TclError:
+                # Ignoring the TclError raised when window can't be destroyed after destruction
+                pass
+
+            self.chats_display.mainloop()
+
             # TODO - Make signup method in login_manager and call it here.
             # Create a new user object and write it's password and username to the db
         
         else:
-            pass
+            #! Edit this when login logic is added
+            self.chats_display = ChatsDisplay()
+            
+            try:
+                self.parent.destroy()
+        
+            except TclError:
+                # Ignoring the TclError raised when window can't be destroyed after destruction
+                pass
+            
+            self.chats_display.mainloop()
             # TODO - Make login method in login_manager and call it here.
             # Check if user exists and validate credentials
 
@@ -45,7 +71,12 @@ class LoginScreen(ctk.CTk):
 
         self.title("Login")
         self.geometry("400x600")
-        self.wm_iconbitmap("../../assets/app_icon.ico")
+        try:
+            self.wm_iconbitmap("../../assets/app_icon.ico")
+        except TclError:
+            # Acessing assets directly when the code is run from app.py
+            self.wm_iconbitmap("assets/app_icon.ico")
+
         self.maxsize(width=400,height=600)
 
         self.login_frame = LoginFrame(master=self)

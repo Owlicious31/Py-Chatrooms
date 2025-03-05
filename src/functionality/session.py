@@ -1,5 +1,5 @@
-from messages.receiver import MessageReceiver
-from messages.sender import MessageSender
+from .messages.receiver import MessageReceiver
+from .messages.sender import MessageSender
 
 class Session:
 

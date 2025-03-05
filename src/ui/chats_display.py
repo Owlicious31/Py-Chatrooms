@@ -9,7 +9,7 @@ parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
 
 from functionality.session_manager import SessionManager
-from session_display import SessionDisplay
+from .session_display import SessionDisplay
 from util.exceptions import SessionParsingException
 
 DARKER_GREY = "#141414"
@@ -144,7 +144,13 @@ class ChatsDisplay(ctk.CTk):
 
         self.title("Your Chats")
         self.geometry("400x600")
-        self.wm_iconbitmap("../../assets/app_icon.ico")
+
+        try:
+            self.wm_iconbitmap("../../assets/app_icon.ico")
+        except TclError:
+            # Acessing assets directly when the code is run from app.py
+            self.wm_iconbitmap("assets/app_icon.ico")
+
         self.maxsize(width=400,height=600)
 
         self.session_manager = SessionManager()
