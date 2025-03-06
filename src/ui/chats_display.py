@@ -68,7 +68,7 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
                         font=("arial",18,"normal"),
                         width=380,
                         height=60,
-                        command= lambda: self.open_session(index=index)
+                        command= lambda i=index: self.open_session(index=i)
                         )
                 
                 session_button.pack(pady=10,anchor="w") 
