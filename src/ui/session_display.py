@@ -50,11 +50,13 @@ class SessionDisplay(ctk.CTk):
             child.destroy()
 
         for message in messages:
+            message = f"[Name]: {message}"
             message_label = ctk.CTkLabel(master=self.messages_display,text=message)
             message_label.pack(anchor="w")
+            self.messages_display._parent_canvas.yview_moveto(1)
 
         #TODO - Stop messages from being sent when the program first opens and sync messages between users
-        # and reduce message sending delay. Add docstrings.
+        # and reduce message sending delay. Add docstrings. Allow usernames to be passed to messages
         
 
     def return_to_chats(self) -> None:
