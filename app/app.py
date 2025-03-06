@@ -18,7 +18,6 @@ class App:
 
     
     def run(self) -> None:
-
         self.login_screen.mainloop()
 
 
