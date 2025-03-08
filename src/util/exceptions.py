@@ -13,6 +13,7 @@ class NonExistentSessionException(Exception):
 
 class SessionParsingException(Exception):
     """Was unable to read session info and utilize it"""
+    pass
 
 class InvalidCredentialsException(Exception):
     """Provided user credentials did not match thos stored in the db"""
