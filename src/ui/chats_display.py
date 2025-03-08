@@ -40,6 +40,7 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
             self.session_buttons = []
 
             self.create_session_buttons(self.available_sessions)
+        
             
     def create_session_buttons(self,sessions: list[dict]) -> None:
         """

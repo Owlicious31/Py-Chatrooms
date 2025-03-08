@@ -1,8 +1,12 @@
 import os
 import sys
+import time
+import threading
 import customtkinter as ctk
 from tkinter import TclError
+import _tkinter
 
+# Appending src directory to sys.path in order access the functionality directory
 current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
@@ -27,7 +31,7 @@ class SessionDisplay(ctk.CTk):
         
         self.maxsize(width=400,height=600)
 
-        self.messages_display = ctk.CTkScrollableFrame(master=self,height=300,width=270,border_color="black",border_width=5)
+        self.messages_display = ctk.CTkScrollableFrame(master=self,height=300,width=270,border_width=5)
         self.messages_display.grid(column=0,row=1,columnspan=2,pady=30,padx=50)
         
         self.message_entry = ctk.CTkEntry(master=self,placeholder_text="Type your message")
@@ -39,29 +43,57 @@ class SessionDisplay(ctk.CTk):
         self.return_button = ctk.CTkButton(master=self,text="Return to chats",command=self.return_to_chats)
         self.return_button.grid(column=0,row=0,sticky="w",pady=20,padx=10)
 
+        self.messages_thread = threading.Thread(target=self.update_message_display,daemon=True)
+        self.messages_thread.start()
+
 
     def send_message(self) -> None:
         if not self.message_entry.get():
             return
 
-        messages = self.session.process_and_return_message(message=self.message_entry.get())
-        
-        for child in self.messages_display.winfo_children():
-            child.destroy()
+        self.session.send_message(message=self.message_entry.get())
 
-        for message in messages:
-            message = f"[Name]: {message}"
-            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
-            message_label.pack(anchor="w")
-            self.messages_display._parent_canvas.yview_moveto(1)
+        self.message_entry.delete(0,"end")
+    
 
-        #TODO - Stop messages from being sent when the program first opens and sync messages between users
-        # and reduce message sending delay. Add docstrings. Allow usernames to be passed to messages
+    def update_message_display(self) -> None:
+        try:
+            displayed_messages = []
+            
+            while True:
+                messages = self.session.receiver.messages
+                
+                # When no messages have been sent yet
+                if not displayed_messages:
+                    for message in messages:
+                        message = f"[Name]: {message}"
+                        message_label = ctk.CTkLabel(master=self.messages_display,text=message)
+                        message_label.pack(anchor="w")
+
+                        displayed_messages.append(message)
+
+                else:
+                    for i,message in enumerate(messages):
+                        message = f"[Name]: {message}"
+
+                        # Checking to see if new messages have been added
+                        if i > len(displayed_messages) - 1:
+                            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
+                            message_label.pack(anchor="w")
+
+                            displayed_messages.append(message)
+                            
+                self.messages_display._parent_canvas.yview_moveto(1.0)
+                time.sleep(1)
         
+        # Ignoring the error raised when the thread joins after the window closes
+        except _tkinter.TclError:
+            pass
+
 
     def return_to_chats(self) -> None:
         from .chats_display import ChatsDisplay
-        #Import is called in function to avoid circular imports
+        # Import is called in function to avoid circular imports
 
         self.chats_window = ChatsDisplay()
 
@@ -74,6 +106,7 @@ class SessionDisplay(ctk.CTk):
             pass
 
         self.chats_window.mainloop()
+
 
 if __name__ == "__main__":
     app = SessionDisplay(chat_name="Test")

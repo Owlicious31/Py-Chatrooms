@@ -4,7 +4,7 @@ import pika
 class MessageReceiver:
 
     def __init__(self) -> None:
-        self.messages = []
+        self.messages: list[str] = []
 
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
         self.channel = self.connection.channel()

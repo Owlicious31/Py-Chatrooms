@@ -7,12 +7,5 @@ class Session:
         self.sender = MessageSender()
         self.receiver = MessageReceiver()
 
-        self.all_messages = self.receiver.messages
-
-
-    def process_and_return_message(self,message: str) -> list[str]:
+    def send_message(self,message: str) -> None:
         self.sender.send_message(message)
-        return self.receiver.messages
-    
-#TODO - replace returning messages with listening for messages and update gui whenever new message is sent
-#TODO - add listen for messages method
