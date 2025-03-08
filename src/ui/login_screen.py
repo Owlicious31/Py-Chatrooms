@@ -35,7 +35,7 @@ class LoginFrame(ctk.CTkFrame):
         if self.new_user_checkbox.get() == 1:
             #! Edit this when login logic is added
             self.chats_display = ChatsDisplay()
-            self.chats_display.mainloop()
+
             try:
                 self.parent.destroy()
         
