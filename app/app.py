@@ -23,8 +23,10 @@ class App:
 
     def show_error(self, *args):
         err = traceback.format_exception(*args)[-1]
+
         if "KeyboardInterrupt" in err:
             return
+        
         CTkMessagebox(title="Error", message=f"An error occured: {err}", icon="cancel")
 
 if __name__ == "__main__":

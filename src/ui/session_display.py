@@ -25,6 +25,7 @@ class SessionDisplay(ctk.CTk):
 
         try:
             self.wm_iconbitmap("../../assets/app_icon.ico")
+        
         except TclError:
             # Acessing assets directly when the code is run from app.py
             self.wm_iconbitmap("assets/app_icon.ico")
@@ -58,7 +59,7 @@ class SessionDisplay(ctk.CTk):
 
     def update_message_display(self) -> None:
         try:
-            displayed_messages = []
+            displayed_messages: list[str] = []
             
             while True:
                 messages = self.session.receiver.messages

@@ -1,4 +1,5 @@
 
+#! Deprecated class - remains for testing purposes
 
 class SessionManager:
 

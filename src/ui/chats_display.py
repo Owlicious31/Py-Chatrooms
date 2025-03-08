@@ -23,7 +23,7 @@ class ChatLabelFrame(ctk.CTkFrame):
         self.main_label.pack()
 
 
-class MessagesDisplay(ctk.CTkScrollableFrame):
+class SessionsDisplay(ctk.CTkScrollableFrame):
 
     def __init__(self,master: ctk.CTk,available_sessions: list[dict]) -> None:
         super().__init__(master=master)
@@ -37,7 +37,7 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
         
         else:
             self.available_sessions = available_sessions
-            self.session_buttons = []
+            self.session_buttons: list[ctk.CTkButton] = []
 
             self.create_session_buttons(self.available_sessions)
         
@@ -94,17 +94,15 @@ class MessagesDisplay(ctk.CTkScrollableFrame):
 
         self.session_display = SessionDisplay(chat_name=session_name)
 
-        # Destroying chats window so only one session can be active at a time
+        # Withdrawing chats window so only one session can be active at a time
         try:
-            self.parent.destroy()
+            self.parent.withdraw()
         
         except TclError:
             # Ignoring the TclError raised when window can't be destroyed after destruction
             pass
 
         self.session_display.mainloop()
-
-
         # TODO - Add the ability for chat history to be retrieved
 
 
@@ -130,6 +128,7 @@ class SessionManagementFrame(ctk.CTkFrame):
         self.new_session_button = ctk.CTkButton(master=self,text="Create Session",command=self.create_new_session)
         self.new_session_button.grid(column=1,row=3,pady=10)
 
+
     def add_session(self) -> None:
         pass
 
@@ -148,6 +147,7 @@ class ChatsDisplay(ctk.CTk):
 
         try:
             self.wm_iconbitmap("../../assets/app_icon.ico")
+        
         except TclError:
             # Acessing assets directly when the code is run from app.py
             self.wm_iconbitmap("assets/app_icon.ico")
@@ -158,7 +158,7 @@ class ChatsDisplay(ctk.CTk):
         self.chat_label = ChatLabelFrame(master=self)
         self.chat_label.grid(column=0,row=0)
 
-        self.messages_display = MessagesDisplay(master=self,available_sessions=self.session_manager.all_sessions)
+        self.messages_display = SessionsDisplay(master=self,available_sessions=self.session_manager.all_sessions)
         self.messages_display.grid(column=0,row=1)
 
         self.session_management_display = SessionManagementFrame(master=self)
