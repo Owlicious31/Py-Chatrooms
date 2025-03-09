@@ -21,6 +21,11 @@ class MessageReceiver:
 
 
     def listen_for_messages(self) -> None:
+        """
+        Listen for messages being sent to the exchange and execute protocol for receiving messages.
+        Any exceptions will cause the channel to stop listening for messages and close the connection.
+        :return: None
+        """
         try:
             self.channel.start_consuming()
         except:
@@ -28,10 +33,17 @@ class MessageReceiver:
         
 
     def receive_message(self,ch, method, properties, body) -> None:
+        """
+        Receive messages sent to the queue and append them to the instance's list of messages.
+        :return: None
+        """
         self.messages.append(f"{body.decode("utf-8")}")
         ch.basic_ack(delivery_tag=method.delivery_tag)  
 
 
     def stop_receiving_messages(self) -> None:
+        """
+        Stop listening for messages and close the active connection.
+        """
         self.channel.stop_consuming()
         self.connection.close()

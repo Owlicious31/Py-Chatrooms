@@ -18,6 +18,8 @@ class SessionDisplay(ctk.CTk):
     def __init__(self,chat_name: str) -> None:
         super().__init__()
 
+        self.protocol("WM_DELETE_WINDOW",self.quit)
+
         self.session = Session()
 
         self.title(f"Chat session - {chat_name}")
@@ -49,6 +51,11 @@ class SessionDisplay(ctk.CTk):
 
 
     def send_message(self) -> None:
+        """
+        Call the session'ssend_message method and clear the message entry. Does not accept
+        empty strings.
+        :return: None
+        """
         if not self.message_entry.get():
             return
 
@@ -58,10 +65,18 @@ class SessionDisplay(ctk.CTk):
     
 
     def update_message_display(self) -> None:
+        """
+        Update messages on the display in real-time. Checks each message sent to the session's
+        queue and packs messages on the display if they aren't already in the displayed messages.
+        This function runs in a background thread.
+        :return: None
+        """
         try:
+            # Messages already on the display
             displayed_messages: list[str] = []
             
             while True:
+                # All of the messages in the session's queue
                 messages = self.session.receiver.messages
                 
                 # When no messages have been sent yet
@@ -77,7 +92,8 @@ class SessionDisplay(ctk.CTk):
                     for i,message in enumerate(messages):
                         message = f"[Name]: {message}"
 
-                        # Checking to see if new messages have been added
+                        # Checking to see if the message's index exceeds the final index of the displayed messages
+                        # i.e checking to see if the message is new or already displayed
                         if i > len(displayed_messages) - 1:
                             message_label = ctk.CTkLabel(master=self.messages_display,text=message)
                             message_label.pack(anchor="w")
@@ -105,8 +121,19 @@ class SessionDisplay(ctk.CTk):
         except TclError:
             # Ignoring the TclError raised when window can't be destroyed after destruction
             pass
+        
+        # Raising the window
+        self.chats_window.deiconify()
 
-        self.chats_window.mainloop()
+
+    def quit(self) -> None:
+        """
+        Exit the mainloop and destroy the window. Ensures mainloop ends when "x" button is used to close the
+        window
+        :return: None
+        """
+        self.quit()
+        self.destroy()
 
 
 if __name__ == "__main__":

@@ -15,6 +15,9 @@ from util.exceptions import SessionParsingException
 DARKER_GREY = "#141414"
 
 class ChatLabelFrame(ctk.CTkFrame):
+    """
+    The frame containing the "Chats" label at the very top of the window.
+    """
 
     def __init__(self,master: ctk.CTk) -> None:
         super().__init__(master=master)
@@ -24,6 +27,9 @@ class ChatLabelFrame(ctk.CTkFrame):
 
 
 class SessionsDisplay(ctk.CTkScrollableFrame):
+    """
+    The frame containing all of the available sessions.
+    """
 
     def __init__(self,master: ctk.CTk,available_sessions: list[dict]) -> None:
         super().__init__(master=master)
@@ -95,18 +101,16 @@ class SessionsDisplay(ctk.CTkScrollableFrame):
         self.session_display = SessionDisplay(chat_name=session_name)
 
         # Withdrawing chats window so only one session can be active at a time
-        try:
-            self.parent.withdraw()
-        
-        except TclError:
-            # Ignoring the TclError raised when window can't be destroyed after destruction
-            pass
+        self.parent.withdraw()
 
         self.session_display.mainloop()
         # TODO - Add the ability for chat history to be retrieved
 
 
 class SessionManagementFrame(ctk.CTkFrame):
+    """
+    The frame containing the widgets responsible for session adding and creation logic.
+    """
 
     def __init__(self,master: ctk.CTk) -> None:
         super().__init__(master=master,fg_color=DARKER_GREY)
@@ -142,6 +146,9 @@ class ChatsDisplay(ctk.CTk):
     def __init__(self) -> None:
         super().__init__()
 
+        self.protocol("WM_DELETE_WINDOW",self.quit)
+
+
         self.title("Your Chats")
         self.geometry("400x600")
 
@@ -163,6 +170,16 @@ class ChatsDisplay(ctk.CTk):
 
         self.session_management_display = SessionManagementFrame(master=self)
         self.session_management_display.grid(column=0,row=2,sticky="nsew")
+
+
+    def quit(self) -> None:
+        """
+        Exit the mainloop and destroy the window. Ensures mainloop ends when "x" button is used to close the
+        window
+        :return: None
+        """
+        self.quit()
+        self.destroy()
 
 
 if __name__ == "__main__":

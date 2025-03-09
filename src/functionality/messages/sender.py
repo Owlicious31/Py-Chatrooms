@@ -10,6 +10,11 @@ class MessageSender:
 
 
     def send_message(self,message: str) -> None:
+        """
+        Send a message to a central chat exchange. Messages are subsequently distributed to receiving queues.
+        :param message: The message being sent
+        :return: None
+        """
         self.channel.basic_publish(exchange='chatExchange',
                       routing_key='',
                       body=message,
