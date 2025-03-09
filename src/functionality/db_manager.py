@@ -1,4 +1,3 @@
-from ast import main
 from tinydb import TinyDB, Query
 
 class DatabaseManager:
