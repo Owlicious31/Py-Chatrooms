@@ -178,7 +178,6 @@ class ChatsDisplay(ctk.CTk):
         window
         :return: None
         """
-        self.quit()
         self.destroy()
 
 

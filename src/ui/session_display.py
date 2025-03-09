@@ -15,12 +15,12 @@ from functionality.session import Session
 
 class SessionDisplay(ctk.CTk):
 
-    def __init__(self,chat_name: str) -> None:
+    def __init__(self, chat_name: str) -> None:
         super().__init__()
 
         self.protocol("WM_DELETE_WINDOW",self.quit)
 
-        self.session = Session()
+        self.session = Session(chat_name)
 
         self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
@@ -50,9 +50,14 @@ class SessionDisplay(ctk.CTk):
         self.messages_thread.start()
 
 
+    # TODO - pack messages in message display
+    def load_message_history(self) -> None:
+        pass
+
+
     def send_message(self) -> None:
         """
-        Call the session'ssend_message method and clear the message entry. Does not accept
+        Call the session's send_message method and clear the message entry. Does not accept
         empty strings.
         :return: None
         """
@@ -132,7 +137,6 @@ class SessionDisplay(ctk.CTk):
         window
         :return: None
         """
-        self.quit()
         self.destroy()
 
 

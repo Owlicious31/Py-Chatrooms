@@ -1,11 +1,16 @@
+from .db_manager import DatabaseManager
 from .messages.receiver import MessageReceiver
 from .messages.sender import MessageSender
 
 class Session:
 
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
+        self.database = DatabaseManager()
+        self.message_history = self.database.get_message_history(name)
+
         self.sender = MessageSender()
         self.receiver = MessageReceiver()
+
 
     def send_message(self,message: str) -> None:
         """
