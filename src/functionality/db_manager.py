@@ -4,13 +4,17 @@ class DatabaseManager:
 
     def __init__(self) -> None:
         self.db = TinyDB("../../sessions_info.json")
-        self.Chat = Query()
 
-        self.available_session = self.db.all()
+        if not self.db.all():
+            self.db = TinyDB("./sessions_info.json")
+            
+        self.Chat = Query()
 
         for session in self.db:
             if len(session["messages"]) > 1000:
                 self.update_message_history(session["name"],session["messages"][:500])
+
+        self.available_sessions = self.db.all()
 
     
     def get_message_history(self,chat_name: str) -> list[str]:

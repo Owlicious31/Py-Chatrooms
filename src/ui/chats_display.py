@@ -8,7 +8,7 @@ current_dir = os.path.dirname(__file__)
 parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
 
-from functionality.session_manager import SessionManager
+from functionality.db_manager import DatabaseManager
 from .session_display import SessionDisplay
 from util.exceptions import SessionParsingException
 
@@ -104,7 +104,6 @@ class SessionsDisplay(ctk.CTkScrollableFrame):
         self.parent.withdraw()
 
         self.session_display.mainloop()
-        # TODO - Add the ability for chat history to be retrieved
 
 
 class SessionManagementFrame(ctk.CTkFrame):
@@ -161,11 +160,11 @@ class ChatsDisplay(ctk.CTk):
 
         self.maxsize(width=400,height=600)
 
-        self.session_manager = SessionManager()
+        self.db_handler = DatabaseManager()
         self.chat_label = ChatLabelFrame(master=self)
         self.chat_label.grid(column=0,row=0)
 
-        self.messages_display = SessionsDisplay(master=self,available_sessions=self.session_manager.all_sessions)
+        self.messages_display = SessionsDisplay(master=self,available_sessions=self.db_handler.available_sessions)
         self.messages_display.grid(column=0,row=1)
 
         self.session_management_display = SessionManagementFrame(master=self)
@@ -179,7 +178,6 @@ class ChatsDisplay(ctk.CTk):
         :return: None
         """
         self.destroy()
-
 
 if __name__ == "__main__":
     display = ChatsDisplay()
