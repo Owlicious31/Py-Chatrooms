@@ -156,8 +156,3 @@ class SessionDisplay(ctk.CTk):
         self.db_manager.update_message_history(self.session.name,self.session.messages)
         self.destroy()
         sys.exit(0)
-
-
-if __name__ == "__main__":
-    app = SessionDisplay(chat_name="Test")
-    app.mainloop()

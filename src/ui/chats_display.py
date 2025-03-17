@@ -34,7 +34,7 @@ class SessionsDisplay(ctk.CTkScrollableFrame):
     def __init__(self,master: ctk.CTk,available_sessions: list[dict]) -> None:
         super().__init__(master=master)
 
-        self.configure(height=400,width=400)
+        self.configure(height=445,width=400)
         self.parent = master
 
         if not available_sessions:
@@ -111,33 +111,44 @@ class SessionManagementFrame(ctk.CTkFrame):
     The frame containing the widgets responsible for session adding and creation logic.
     """
 
-    def __init__(self,master: ctk.CTk) -> None:
+    def __init__(self,master: ctk.CTk,db_manager: DatabaseManager) -> None:
         super().__init__(master=master,fg_color=DARKER_GREY)
+
+        self.parent = master
+
+        self.db_manager = db_manager
 
         self.configure(height=300,width=400)
 
-        self.session_management_label = ctk.CTkLabel(master=self,text="Add/Create session",font=("arial",18,"normal"))
+        self.session_management_label = ctk.CTkLabel(master=self,text="Create session",font=("arial",18,"normal"))
         self.session_management_label.grid(column=0,row=0,columnspan=2,pady=10)
 
-        self.add_session_entry = ctk.CTkEntry(master=self,placeholder_text="Invite code here...")
-        self.add_session_entry.grid(column=0,row=1,padx=10,pady=10)
-
-        self.add_session_button = ctk.CTkButton(master=self,text="Add Session",command=self.add_session)
-        self.add_session_button.grid(column=1,row=1,pady=10)
-
         self.new_session_entry = ctk.CTkEntry(master=self,placeholder_text="Session name...")
-        self.new_session_entry.grid(column=0,row=3,padx=10,pady=10)
+        self.new_session_entry.grid(column=0,row=1,padx=10,pady=10)
 
         self.new_session_button = ctk.CTkButton(master=self,text="Create Session",command=self.create_new_session)
-        self.new_session_button.grid(column=1,row=3,pady=10)
-
-
-    def add_session(self) -> None:
-        pass
+        self.new_session_button.grid(column=1,row=1,pady=10)
 
 
     def create_new_session(self) -> None:
-        pass
+        """
+        Create a new session, pack it on the display and add it to the db.
+        :return: None
+        """
+        chat_name = self.new_session_entry.get()
+        index = len(self.parent.sessions_display.winfo_children()) + 1
+
+        self.db_manager.create_new_session(chat_name=chat_name)
+        
+        session_button = ctk.CTkButton(
+                        master=self.parent.sessions_display,
+                        text=f"{index}. {chat_name}",
+                        font=("arial",18,"normal"),
+                        width=380,
+                        height=60,
+                        command= lambda : self.parent.sessions_display.open_session(index)
+                        )
+        session_button.pack(pady=10,anchor="w")
 
 
 class ChatsDisplay(ctk.CTk):
@@ -159,14 +170,14 @@ class ChatsDisplay(ctk.CTk):
 
         self.maxsize(width=400,height=600)
 
-        self.db_handler = DatabaseManager()
+        self.db_manager = DatabaseManager()
         self.chat_label = ChatLabelFrame(master=self)
         self.chat_label.grid(column=0,row=0)
 
-        self.messages_display = SessionsDisplay(master=self,available_sessions=self.db_handler.available_sessions)
-        self.messages_display.grid(column=0,row=1)
+        self.sessions_display = SessionsDisplay(master=self,available_sessions=self.db_manager.available_sessions)
+        self.sessions_display.grid(column=0,row=1)
 
-        self.session_management_display = SessionManagementFrame(master=self)
+        self.session_management_display = SessionManagementFrame(master=self,db_manager=self.db_manager)
         self.session_management_display.grid(column=0,row=2,sticky="nsew")
 
 
@@ -178,10 +189,3 @@ class ChatsDisplay(ctk.CTk):
         """
         self.destroy()
         sys.exit(0)
-
-
-if __name__ == "__main__":
-    display = ChatsDisplay()
-    display.mainloop()
-
-        

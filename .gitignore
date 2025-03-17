@@ -1,5 +1,5 @@
 .venv
 __pycache__/
-*.json
+test_info.json
 .env
 .idea

@@ -1,9 +1,14 @@
 from tinydb import TinyDB, Query
 
+ENVIRONMENT = "PROD"
+
 class DatabaseManager:
 
     def __init__(self) -> None:
-        self.db = TinyDB("../../sessions_info.json")
+        if ENVIRONMENT == "PROD":
+            self.db = TinyDB("../../sessions_info.json")
+        else:
+            self.db = TinyDB("../../test_info.json")
 
         if not self.db.all():
             self.db = TinyDB("./sessions_info.json")
@@ -28,9 +33,4 @@ class DatabaseManager:
     
     def create_new_session(self,chat_name: str) -> None:
         self.db.insert({"name":chat_name,"messages":[]})
-
-
-
-if __name__ == "__main__":
-    dm = DatabaseManager()
     
