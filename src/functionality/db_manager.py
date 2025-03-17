@@ -11,8 +11,8 @@ class DatabaseManager:
         self.Chat = Query()
 
         for session in self.db:
-            if len(session["messages"]) > 1000:
-                self.update_message_history(session["name"],session["messages"][:500])
+            if len(session["messages"]) >= 250:
+                self.update_message_history(session["name"],session["messages"][125:])
 
         self.available_sessions = self.db.all()
 
@@ -33,5 +33,4 @@ class DatabaseManager:
 
 if __name__ == "__main__":
     dm = DatabaseManager()
-    dm.create_new_session("chat2")
     

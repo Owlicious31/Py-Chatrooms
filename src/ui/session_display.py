@@ -12,6 +12,7 @@ parent_dir = os.path.join(current_dir,"..")
 sys.path.append(os.path.abspath(parent_dir))
 
 from functionality.session import Session
+from functionality.db_manager import DatabaseManager
 
 class SessionDisplay(ctk.CTk):
 
@@ -21,6 +22,7 @@ class SessionDisplay(ctk.CTk):
         self.protocol("WM_DELETE_WINDOW",self.quit)
 
         self.session = Session(chat_name)
+        self.db_manager = DatabaseManager()
 
         self.title(f"Chat session - {chat_name}")
         self.geometry("400x600")
@@ -49,10 +51,19 @@ class SessionDisplay(ctk.CTk):
         self.messages_thread = threading.Thread(target=self.update_message_display,daemon=True)
         self.messages_thread.start()
 
+        self.load_message_history()
 
-    # TODO - pack messages in message display
+
     def load_message_history(self) -> None:
-        pass
+        """
+        Pack messages from the session's history onto the messages display.
+        :return: None
+        """
+        for message in self.db_manager.get_message_history(self.session.name):
+            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
+            message_label.pack(anchor="w")
+        
+        self.messages_display._parent_canvas.yview_moveto(1.0)
 
 
     def send_message(self) -> None:
@@ -65,7 +76,6 @@ class SessionDisplay(ctk.CTk):
             return
 
         self.session.send_message(message=self.message_entry.get())
-
         self.message_entry.delete(0,"end")
     
 
@@ -92,6 +102,7 @@ class SessionDisplay(ctk.CTk):
                         message_label.pack(anchor="w")
 
                         displayed_messages.append(message)
+                        self.session.messages.append(message)
 
                 else:
                     for i,message in enumerate(messages):
@@ -104,6 +115,7 @@ class SessionDisplay(ctk.CTk):
                             message_label.pack(anchor="w")
 
                             displayed_messages.append(message)
+                            self.session.messages.append(message)
                             
                 self.messages_display._parent_canvas.yview_moveto(1.0)
                 time.sleep(1)
@@ -112,11 +124,15 @@ class SessionDisplay(ctk.CTk):
         except _tkinter.TclError:
             pass
 
+        except RuntimeError:
+            pass
+
 
     def return_to_chats(self) -> None:
         from .chats_display import ChatsDisplay
         # Import is called in function to avoid circular imports
 
+        self.db_manager.update_message_history(self.session.name,self.session.messages)
         self.chats_window = ChatsDisplay()
 
         # Destroying session window so only one session can be active at a time
@@ -137,7 +153,9 @@ class SessionDisplay(ctk.CTk):
         window
         :return: None
         """
+        self.db_manager.update_message_history(self.session.name,self.session.messages)
         self.destroy()
+        sys.exit(0)
 
 
 if __name__ == "__main__":

@@ -147,7 +147,6 @@ class ChatsDisplay(ctk.CTk):
 
         self.protocol("WM_DELETE_WINDOW",self.quit)
 
-
         self.title("Your Chats")
         self.geometry("400x600")
 
@@ -178,6 +177,8 @@ class ChatsDisplay(ctk.CTk):
         :return: None
         """
         self.destroy()
+        sys.exit(0)
+
 
 if __name__ == "__main__":
     display = ChatsDisplay()

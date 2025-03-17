@@ -5,8 +5,10 @@ from .messages.sender import MessageSender
 class Session:
 
     def __init__(self, name: str) -> None:
+        self.name = name
+        
         self.database = DatabaseManager()
-        self.message_history = self.database.get_message_history(name)
+        self.messages = self.database.get_message_history(self.name)
 
         self.sender = MessageSender()
         self.receiver = MessageReceiver()
