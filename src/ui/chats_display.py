@@ -136,8 +136,13 @@ class SessionManagementFrame(ctk.CTkFrame):
         :return: None
         """
         chat_name = self.new_session_entry.get()
-        index = len(self.parent.sessions_display.winfo_children()) + 1
+        first_child_widget = self.parent.sessions_display.winfo_children()[0]
 
+        # Checking for the no sessions label
+        if first_child_widget.cget("text").lower() == "no sessions":
+            first_child_widget.destroy()
+
+        index = len(self.parent.sessions_display.winfo_children()) + 1
         self.db_manager.create_new_session(chat_name=chat_name)
         
         session_button = ctk.CTkButton(
