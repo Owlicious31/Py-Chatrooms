@@ -40,6 +40,7 @@ class SessionsDisplay(ctk.CTkScrollableFrame):
         if not available_sessions:
             self.no_sessions_label = ctk.CTkLabel(master=self,text="No Sessions",text_color="white",font=("arial",24,"bold"))
             self.no_sessions_label.pack(anchor="w")
+            self.available_sessions = []
         
         else:
             self.available_sessions = available_sessions
@@ -142,12 +143,13 @@ class SessionManagementFrame(ctk.CTkFrame):
         if first_child_widget.cget("text").lower() == "no sessions":
             first_child_widget.destroy()
 
-        index = len(self.parent.sessions_display.winfo_children()) + 1
+        index = len(self.parent.sessions_display.winfo_children())
         self.db_manager.create_new_session(chat_name=chat_name)
+        self.parent.sessions_display.available_sessions.append({"name":chat_name,"messages":[]})
         
         session_button = ctk.CTkButton(
                         master=self.parent.sessions_display,
-                        text=f"{index}. {chat_name}",
+                        text=f"{index + 1}. {chat_name}",
                         font=("arial",18,"normal"),
                         width=380,
                         height=60,
