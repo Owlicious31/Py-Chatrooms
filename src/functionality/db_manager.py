@@ -7,17 +7,19 @@ class DatabaseManager:
 
     def __init__(self) -> None:
         if ENVIRONMENT == "PROD":
+            self.db = TinyDB("./sessions_info.json")
 
+        else:
             if open("./sessions_info.json").read() != "":
+
                 # Clearing the file
                 open("./sessions_info.json","w").close()
 
                 print("Quitting program...")
                 sys.exit("WARNING: Do not use sessions_info.json in development.")
+
             else:
-                self.db = TinyDB("./sessions_info.json")
-        else:
-            self.db = TinyDB("./test_info.json")
+                self.db = TinyDB("./test_info.json")
 
         if __name__ == "__main__":
             self.db = TinyDB("../../test_info.json")
