@@ -99,12 +99,22 @@ class SessionsDisplay(ctk.CTkScrollableFrame):
         session_info = self.available_sessions[index]
         session_name = session_info["name"]
 
-        self.session_display = SessionDisplay(chat_name=session_name)
+        self.session_display = SessionDisplay(chat_name=session_name,username=self.prompt_for_username())
 
         # Withdrawing chats window so only one session can be active at a time
         self.parent.withdraw()
 
         self.session_display.mainloop()
+    
+
+    def prompt_for_username(self) -> str:
+        """
+        Create an InputDialog to prompt the user for the name they would like to use.
+        :return: the provided name
+        """
+        user_input = ctk.CTkInputDialog(title="PyChatrooms",text="What username would you like to use? ")
+        name = user_input.get_input()
+        return name if name else "Anonymous"
 
 
 class SessionManagementFrame(ctk.CTkFrame):

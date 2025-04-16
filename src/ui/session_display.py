@@ -16,12 +16,12 @@ from functionality.db_manager import DatabaseManager
 
 class SessionDisplay(ctk.CTk):
 
-    def __init__(self, chat_name: str) -> None:
+    def __init__(self, chat_name: str,username: str) -> None:
         super().__init__()
 
         self.protocol("WM_DELETE_WINDOW",self.quit)
 
-        self.session = Session(chat_name)
+        self.session = Session(chat_name,username)
         self.db_manager = DatabaseManager()
 
         self.title(f"Chat session - {chat_name}")
@@ -97,7 +97,7 @@ class SessionDisplay(ctk.CTk):
                 # When no messages have been sent yet
                 if not displayed_messages:
                     for message in messages:
-                        message = f"[Name]: {message}"
+                        message = message
                         message_label = ctk.CTkLabel(master=self.messages_display,text=message)
                         message_label.pack(anchor="w")
 
@@ -106,7 +106,7 @@ class SessionDisplay(ctk.CTk):
 
                 else:
                     for i,message in enumerate(messages):
-                        message = f"[Name]: {message}"
+                        message = message
 
                         # Checking to see if the message's index exceeds the final index of the displayed messages
                         # i.e checking to see if the message is new or already displayed

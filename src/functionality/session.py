@@ -4,10 +4,11 @@ from .messages.sender import MessageSender
 
 class Session:
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str,username: str) -> None:
         self.database = DatabaseManager()
         
         self.name = name
+        self.username = username
         self.messages = self.database.get_message_history(self.name)
 
         self.sender = MessageSender()
@@ -20,4 +21,4 @@ class Session:
         :param message: The message being sent.
         :return: None
         """
-        self.sender.send_message(message)
+        self.sender.send_message(f"[{self.username}] {message}")
