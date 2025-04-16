@@ -1,4 +1,3 @@
-import os
 import sys
 import time
 import threading
@@ -6,13 +5,8 @@ import customtkinter as ctk
 from tkinter import TclError
 import _tkinter
 
-# Appending src directory to sys.path in order access the functionality directory
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir,"..")
-sys.path.append(os.path.abspath(parent_dir))
-
-from functionality.session import Session
-from functionality.db_manager import DatabaseManager
+from src.functionality.session import Session
+from src.functionality.db_manager import DatabaseManager
 
 class SessionDisplay(ctk.CTk):
 

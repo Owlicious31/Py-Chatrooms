@@ -3,14 +3,9 @@ import sys
 import customtkinter as ctk
 from tkinter import TclError
 
-# Adding src directory to path in order to import functionality
-current_dir = os.path.dirname(__file__)
-parent_dir = os.path.join(current_dir,"..")
-sys.path.append(os.path.abspath(parent_dir))
-
-from functionality.db_manager import DatabaseManager
+from src.functionality.db_manager import DatabaseManager
 from .session_display import SessionDisplay
-from util.exceptions import SessionParsingException
+from src.util.exceptions import SessionParsingException
 
 DARKER_GREY = "#141414"
 
