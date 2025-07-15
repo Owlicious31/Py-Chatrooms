@@ -8,6 +8,8 @@ import _tkinter
 from src.functionality.session import Session
 from src.functionality.db_manager import DatabaseManager
 
+MESSAGE_DISPLAY_WIDTH = 32
+MESSAGE_LINE_LIMIT = 50
 class SessionDisplay(ctk.CTk):
 
     def __init__(self, chat_name: str,username: str) -> None:
@@ -48,14 +50,36 @@ class SessionDisplay(ctk.CTk):
         self.load_message_history()
 
 
+    def display_message(self, message: str) -> None:
+        """
+        Packs messages on the message display. Messages that have exceed the display width are split into
+        new messages and displayed with a recursive function call. Limit for these messages is 50 split messages.
+
+        :param message: (string) the text to be displayed
+        :return: None
+        """
+        lines_above_limit = int(len(message) / MESSAGE_DISPLAY_WIDTH)
+        
+        if lines_above_limit > MESSAGE_LINE_LIMIT:
+            self.display_message(message[:MESSAGE_LINE_LIMIT * MESSAGE_DISPLAY_WIDTH])
+        
+        elif lines_above_limit != 0:
+            message_label = ctk.CTkLabel(master=self.messages_display,text=message[:MESSAGE_DISPLAY_WIDTH])
+            message_label.pack(anchor="w")
+            self.display_message(message[MESSAGE_DISPLAY_WIDTH:])
+        
+        else:
+            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
+            message_label.pack(anchor="w")
+
+
     def load_message_history(self) -> None:
         """
         Pack messages from the session's history onto the messages display.
         :return: None
         """
         for message in self.db_manager.get_message_history(self.session.name):
-            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
-            message_label.pack(anchor="w")
+            self.display_message(message)
         
         self.messages_display._parent_canvas.yview_moveto(1.0)
 
@@ -92,26 +116,25 @@ class SessionDisplay(ctk.CTk):
                 if not displayed_messages:
                     for message in messages:
                         message = message
-                        message_label = ctk.CTkLabel(master=self.messages_display,text=message)
-                        message_label.pack(anchor="w")
+                        self.display_message(message)
 
                         displayed_messages.append(message)
                         self.session.messages.append(message)
+                        self.messages_display._parent_canvas.yview_moveto(1.0)
 
                 else:
                     for i,message in enumerate(messages):
-                        message = message
-
                         # Checking to see if the message's index exceeds the final index of the displayed messages
-                        # i.e checking to see if the message is new or already displayed
+                        # / checking to see if the message is new or already displayed
+
                         if i > len(displayed_messages) - 1:
-                            message_label = ctk.CTkLabel(master=self.messages_display,text=message)
-                            message_label.pack(anchor="w")
+                            message = message
+                            self.display_message(message)
 
                             displayed_messages.append(message)
                             self.session.messages.append(message)
+                            self.messages_display._parent_canvas.yview_moveto(1.0)
                             
-                self.messages_display._parent_canvas.yview_moveto(1.0)
                 time.sleep(1)
         
         # Ignoring the error raised when the thread joins after the window closes
