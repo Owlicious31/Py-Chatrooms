@@ -1,7 +1,7 @@
 import sys
 from tinydb import TinyDB, Query
 
-ENVIRONMENT = ""
+ENVIRONMENT = "PROD"
 
 class DatabaseManager:
 
