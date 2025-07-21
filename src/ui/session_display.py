@@ -10,6 +10,7 @@ from src.functionality.db_manager import DatabaseManager
 
 MESSAGE_DISPLAY_WIDTH = 32
 MESSAGE_LINE_LIMIT = 50
+MESSAGE_CHARACTER_LIMIT = MESSAGE_LINE_LIMIT * MESSAGE_DISPLAY_WIDTH
 class SessionDisplay(ctk.CTk):
 
     def __init__(self, chat_name: str,username: str) -> None:
@@ -60,13 +61,18 @@ class SessionDisplay(ctk.CTk):
         """
         lines_above_limit = int(len(message) / MESSAGE_DISPLAY_WIDTH)
         
+        # a line limit is enforced to prevent recursion errors and to prevent overly long messages.
         if lines_above_limit > MESSAGE_LINE_LIMIT:
-            self.display_message(message[:MESSAGE_LINE_LIMIT * MESSAGE_DISPLAY_WIDTH])
+            self.display_message(f"[{self.session.username}] (Message was too long to be shown fully)")
         
+        # In cases where a message takes up more than one 36-character line, one line is displayed and trimmed from
+        # the message which is displayed again with a recursive function call.
         elif lines_above_limit != 0:
             message_label = ctk.CTkLabel(master=self.messages_display,text=message[:MESSAGE_DISPLAY_WIDTH])
             message_label.pack(anchor="w")
-            self.display_message(message[MESSAGE_DISPLAY_WIDTH:])
+
+            trimmed_message = message[MESSAGE_DISPLAY_WIDTH:]
+            self.display_message(trimmed_message)
         
         else:
             message_label = ctk.CTkLabel(master=self.messages_display,text=message)
